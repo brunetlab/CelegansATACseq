@@ -1,0 +1,51 @@
+##### Processing
+# convert sra files to fastq
+bash ~/Dropbox/Scripts/ProcessingShells/process_SRA_AD.sh ./ ./
+
+# get to the output from above directory
+cd FASTQ
+
+# trim the reads
+bash /Users/acd13/Dropbox/Scripts/ProcessingShells/trim_galore_SE.sh /Users/acd13/Desktop/GROseq/EE/FASTQ
+# STDOUT was copied to text files in the directory
+
+# Map the trimmed reads
+bash /Users/acd13/Dropbox/Scripts/GROseq_alignment_bowtie2.sh /Users/acd13/Desktop/GROseq/L3/FASTQ /Users/acd13/Desktop/GROseq/L3/bowtie2Bams
+
+# get strand specific reads, and filter for reads with quality MAPQ (>30 in this case), and remove dups (not sure if I'll use that or not)
+bash /Users/acd13/Dropbox/Scripts/GRO_and_RNA_seq_scripts/mapqFilterAndStrandSpecificSplit.sh /Users/acd13/Desktop/GROseq/EE/bowtie2Bams
+
+# After some work I decided that merging the replicates was going to be useful, so I merged the filtered bams
+samtools merge EE_RNAi_groseq_filt.merged.bam SRR639127_1_trimmed.fq.raw.srt.filt.srt.bam SRR639128_1_trimmed.fq.raw.srt.filt.srt.bam
+
+# for possible use down stream I created Homer Tag files
+makeTagDirectory HomerTags/SRR639126/ -genome ce10 -checkGC SRR639126_1_trimmed.fq.raw.srt.filt.srt.bam
+makeTagDirectory HomerTags/merged/ -genome ce10 -checkGC EE_RNAi_groseq_filt.merged.bam
+
+# that resulted in less than optimal results (higher than expected "Average tags per position" and lower than expected "Same / Diff fold enrichment", resulting in Homer not guessing that it was RNA-seq data)
+# To address that I tried removing duplicates and re-running
+bash /Users/acd13/Dropbox/Scripts/ProcessingShells/deDup.sh /Users/acd13/Desktop/GROseq/EE/bowtie2Bams/mapqFiltered
+# When I then made tagDirectories with those it made little to no difference
+# I never really used these
+
+
+#### Transcript discovery
+
+# I went forward with what I had, and used Homer to generate de novo transcripts from the merged and both reps
+findPeaks ./HomerTags/SRR639134 -style groseq -o auto
+# This looked pretty good, but I'll make use of the replicates, and only take the transcripts that are in the merged (possibly with a minimal score) and one of the bio reps
+# To do that I first converted the gtfs to beds to make them easier to deal with:
+cat bowtie2Bams/homerTags/SRR639125/transcripts.gtf | perl -lane 'print join("\t", ($F[0], $F[3], $F[4], (split/\"/,$F[-1])[1], $F[5], $F[6]));' > SRR639125_transcripts.bed
+
+# From there I wrote a script to identify hi-confidence transcripts, termed consensusTranscripts.
+bash /Users/acd13/Dropbox/Scripts/chipSeq_scripts/getConsensusTranscripts_2BioReps.sh ER_RNAi_control_mergedTranscripts.bed SRR639127_transcripts.bed SRR639128_transcripts.bed
+
+# To get the TSSs of these consensus transcripts, and then the promoters, I did the following:
+/Users/acd13/Dropbox/Scripts/ATAC_scripts/5primeOfBed_6cols EE_merged_transcripts_consensusTranscripts.bed > EE_merged_transcripts_consensusTranscripts_TSSs.bed
+slopBed -s -l 1000 -r 0 -i EE_merged_transcripts_consensusTranscripts_TSSs.bed -g $CE10_GSIZE > EE_merged_transcripts_consensusTranscripts_TSSs1kbUpstream.bed
+slopBed -s -l 100 -r 0 -i EE_merged_transcripts_consensusTranscripts_TSSs.bed -g $CE10_GSIZE > EE_merged_transcripts_consensusTranscripts_TSSs100bpUpstream.bed
+
+
+###### Quantification
+# This was done for all of the sampels, and replace a simple coverageBed that I had been using
+analyzeRepeats.pl /Users/acd13/Desktop/ce10GeneModelsFromGersteinEtAl/AG1201.integrated_transcripts.v1205b.ws220.gffReadFiltered.TranscriptsOnly.gtf ce10 -strand + -rpkm -count genes -d ./../bowtie2Bams/homerTags/SRR639134/ > SRR639134.homerAnalyzeRepeats.txt

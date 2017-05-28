@@ -1,0 +1,66 @@
+To make the original model:
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_learn_allFiles.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/binaryFiles/1e-3_no_ATAC /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states 8marks_EE_L3_YA_1e-3_19states 19 8 $CE10_GSIZE ce10_ws220
+
+Move to the resulting directory
+cd 8marks_EE_L3_YA_1e-3_19states
+
+Run the bash command I wrote (to make it easier to edit) to reorder everything (pasted below the command)
+bash toReorder.sh
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_relabel.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/model_19_8marks_EE_L3_YA_1e-3_19states.txt /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/ 8marks_EE_L3_YA_1e-3_19states_reordered /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/labelMap.txt /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderMap.txt /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/columnOrder.txt
+
+Move to the resulting directory
+cd reordered/
+
+# Make the bed files
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_makeSegmention.sh model_19_8marks_EE_L3_YA_1e-3_19states_reordered.txt ./../../binaryFiles/1e-3_no_ATAC/ ./ 8marks_EE_L3_YA_1e-3_19states_reordered 100 $CE10_GSIZE
+
+# Get the enrichments (again all of the individual commands are pasted directly below)
+bash getEnrichments_reordered.sh
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_neighbor.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/EE_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/ANCHORFILES/ce10_ws220/expr/EE/ 150 20 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_neighbor.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/EE_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/ANCHORFILES/ce10_ws220/gene 150 20 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_neighbor.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/L3_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/ANCHORFILES/ce10_ws220/expr/L3/ 150 20 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_neighbor.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/L3_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/ANCHORFILES/ce10_ws220/gene 150 20 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_neighbor.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/YA_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/ANCHORFILES/ce10_ws220/gene 150 20 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/EE_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/geneAnno EE_overlap_geneAnno 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/EE_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/expr/EE EE_overlap_EE_expr 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/EE_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/ATAC_peaks EE_overlap_ATACpeaks 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/EE_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/TFBS/EE EE_overlap_EE_TFBS 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/EE_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/TFBS/L3 EE_overlap_L3_TFBS 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/EE_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/TFBS/YA EE_overlap_YA_TFBS 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/YA_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/geneAnno YA_overlap_geneAnno 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/YA_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/ATAC_peaks YA_overlap_ATACpeaks 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/YA_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/TFBS/YA YA_overlap_YA_TFBS 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/YA_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/TFBS/L3 YA_overlap_L3_TFBS 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/YA_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/TFBS/EE YA_overlap_EE_TFBS 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/L3_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/TFBS/L3 L3_overlap_L3_TFBS 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/L3_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/TFBS/YA L3_overlap_YA_TFBS 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/L3_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/TFBS/EE L3_overlap_EE_TFBS 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/L3_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/geneAnno L3_overlap_geneAnno 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/L3_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/expr/L3 L3_overlap_L3_expr 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
+#
+bash /Users/acd13/Desktop/ChromHMM/scriptsFromAnshul/myVersions/chmm_overlap.sh /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reordered/L3_19_8marks_EE_L3_YA_1e-3_19states_reordered_segments.bed /Users/acd13/Desktop/ChromHMM/COORDS/ce10_ws220/ATAC_peaks L3_overlap_ATACpeaks 150 /Users/acd13/Desktop/ChromHMM/ce10_ws220_EE_L3_YA/8marks_EE_L3_YA_1e-3_19states/reorderLabelMap.txt
