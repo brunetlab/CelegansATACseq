@@ -22,16 +22,16 @@ BAM_DIR=$(echo $2 | sed 's:/$::g')
 
 # 0) Trim adaptor sequences
 cd ${FASTQ_DIR}
-# mkdir Raw
-# for f in $(find "$FASTQ_DIR" -name '*_1.fastq')
-# do
-# 	echo "Trimming: $f...\n"
-# 	fileName2=$(basename "${f}" | sed 's/_1\.fastq/_2\.fastq/g')
-# 	python /Users/acd13/Dropbox/Scripts/MostUsed/pyadapter_trim.py -a $f -b $fileName2
-# 	mv $f ./Raw/
-# 	mv $fileName2 ./Raw/
-# done
-# echo "Finished trimming\n"
+mkdir Raw
+for f in $(find "$FASTQ_DIR" -name '*_1.fastq')
+do
+	echo "Trimming: $f...\n"
+	fileName2=$(basename "${f}" | sed 's/_1\.fastq/_2\.fastq/g')
+	python /Users/acd13/Dropbox/Scripts/MostUsed/pyadapter_trim.py -a $f -b $fileName2
+	mv $f ./Raw/
+	mv $fileName2 ./Raw/
+done
+echo "Finished trimming\n"
 
 # 1) Map with bowite2
 
@@ -66,4 +66,4 @@ do
 done
 
 rm ce10mito*.bt2
-echo "Finished mapping\n"
+echo "Finished mapping"
