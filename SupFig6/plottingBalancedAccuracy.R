@@ -14,54 +14,7 @@ statsColumnNames <- c("sensitivity", "specificity", "positive predictive value",
 
 colnames(trainingData) <- colnames(testingData) <- statsColumnNames
 
-pdf('testingSet_predictionStats.pdf', width=4, height=5)
-  barplot(as.matrix(t(testingData[c(3,2,1),"balanced accuracy"]))
-                  ,beside=T
-                  , ylab='Balanced accuracy'
-                  , ylim=c(0,1)
-                  , xlab='ATAC peak dynamics'
-                  ,col = c('darkorchid4','grey', 'goldenrod2')
-                  ,names.arg = c("Embryo", "No change", "Larval")
-                    )
-abline(h=0.5, col='red')
-
-barplot(as.matrix(t(testingData[c(3,2,1),c("sensitivity", "specificity")]))
-                ,beside=T
-                , ylab='Balanced accuracy'
-                , ylim=c(0,1)
-                , xlab='ATAC peak dynamics'
-                ,col = c('darkorange1', 'cyan4')
-                ,names.arg = c("Embryo", "No change", "Larval")
-)
-legend('top', legend=c('Sensitivity', 'Specificity'), pch=15, col=c('darkorange1', 'cyan4'))
-
-dev.off()
-
-
-pdf('trainingSet_predictionStats.pdf', width=4, height=5)
-barplot(as.matrix(t(trainingData[c(3,2,1),"balanced accuracy"]))
-        ,beside=T
-        , ylab='Balanced accuracy'
-        , ylim=c(0,1)
-        , xlab='ATAC peak dynamics'
-        ,col = c('darkorchid4','grey', 'goldenrod2')
-        ,names.arg = c("Embryo", "No change", "Larval")
-)
-abline(h=0.5, col='red')
-
-barplot(as.matrix(t(trainingData[c(3,2,1),c("sensitivity", "specificity")]))
-        ,beside=T
-        , ylab='Balanced accuracy'
-        , ylim=c(0,1)
-        , xlab='ATAC peak dynamics'
-        ,col = c('darkorange1', 'cyan4')
-        ,names.arg = c("Embryo", "No change", "Larval")
-)
-legend('top', legend=c('Sensitivity', 'Specificity'), pch=15, col=c('darkorange1', 'cyan4'))
-
-dev.off()
-
-# I also want to try to combine the training and testing and plot all in one
+# combine the training and testing and plot all in one
 trainingPlot <- as.matrix(t(trainingData[c(3,2,1),c("sensitivity", "specificity")]))
 testingPlot <- as.matrix(t(testingData[c(3,2,1),c("sensitivity", "specificity")]))
 combinedPlot <- rbind(testingPlot[1,], trainingPlot[1,], testingPlot[2,], trainingPlot[2,])
@@ -85,6 +38,3 @@ legend('top', col=NA
 )
 
 dev.off()
-
-
-
