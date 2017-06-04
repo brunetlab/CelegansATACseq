@@ -38,11 +38,21 @@ rm compare_hiHMMToMyChromHMM.tmp
 mkdir -p $outDir/merged
 cat "${outDir}/10_Rep1.bed" "${outDir}/11_Rep2.bed" | sortBed -i - | mergeBed -i - > "${outDir}/merged/mergedRep.bed"
 cat "${outDir}/12_Het1.bed" "${outDir}/13_Het2.bed" | sortBed -i - | mergeBed -i - > "${outDir}/merged/mergedHet.bed"
-cat "${outDir}/16_Low3.bed" "${outDir}/15_Low2.bed" "${outDir}/14_Low1.bed" | sortBed -i - | mergeBed -i - > "${outDir}/merged/mergedLow.bed"
+cat "${outDir}/16_Low3.bed" "${outDir}/15_Low2.bed" "${outDir}/14_Low1.bed" | \
+sortBed -i - | \
+mergeBed -i - > "${outDir}/merged/mergedLow.bed"
+
 # since I didn't include unmappable, those regions should be in the low bin, so I'll also merge that in
-cat "${outDir}/16_Low3.bed" "${outDir}/15_Low2.bed" "${outDir}/14_Low1.bed" "${outDir}/17_Unmap.bed" | sortBed -i - | mergeBed -i - > "${outDir}/merged/mergedLowUnmap.bed"
+cat "${outDir}/16_Low3.bed" "${outDir}/15_Low2.bed" "${outDir}/14_Low1.bed" "${outDir}/17_Unmap.bed" | \
+sortBed -i - | \
+mergeBed -i - > "${outDir}/merged/mergedLowUnmap.bed"
 cat "${outDir}/2_Enh1.bed" "${outDir}/3_Enh2.bed" | sortBed -i - | mergeBed -i - > "${outDir}/merged/mergedEnh.bed"
 cat "${outDir}/4_Egn1.bed" "${outDir}/5_Egn2.bed" | sortBed -i - | mergeBed -i - > "${outDir}/merged/merged5pTx.bed"
-cat "${outDir}/9_Egn6.bed" "${outDir}/8_Egn5.bed" "${outDir}/7_Egn4.bed" | sortBed -i - | mergeBed -i - > "${outDir}/merged/merged3pTx.bed"
+cat "${outDir}/9_Egn6.bed" "${outDir}/8_Egn5.bed" "${outDir}/7_Egn4.bed" | \
+sortBed -i - | \
+mergeBed -i - > "${outDir}/merged/merged3pTx.bed"
+
 # I don't differentiate b/t gene positions, so I'll also merge all of those
-cat "${outDir}/merged/merged3pTx.bed" "${outDir}/merged/merged5pTx.bed" "${outDir}/6_Egn3.bed" | cut -f 1-3 | sortBed -i - | mergeBed -i - > "${outDir}/merged/mergedAllTx.bed"
+cat "${outDir}/merged/merged3pTx.bed" "${outDir}/merged/merged5pTx.bed" "${outDir}/6_Egn3.bed" | \
+cut -f 1-3 | \
+sortBed -i - | \mergeBed -i - > "${outDir}/merged/mergedAllTx.bed"
