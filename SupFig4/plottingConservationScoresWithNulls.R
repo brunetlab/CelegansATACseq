@@ -36,15 +36,35 @@ rm(phastConsScores.ya, phastConsScores.ya.noChrM, ya.nullData.asOne)
 pdf('conservation_noOutliers.pdf', width=5, height=5)
 # The 0s are for spacing
 boxplot(list(
-  realEENormdVals,nullEENormdVals , 0,
-  realL3NormdVals,nullL3NormdVals , 0,
-  realYANormdVals,nullYANormdVals
-),
-notch=T, 
-col=c('darkorchid4', alpha('darkorchid4',0.5),'white','goldenrod2',alpha('goldenrod2',0.5),'white','darkgreen',alpha('darkgreen',0.5)),
-names=c('Embryo','Null',"","Larval", 'Null','','Adult', 'Null'),
-ylab='Log2(Mean bp PhastCons score / distal and non-coding genome median)'
-, outline=FALSE
+              realEENormdVals
+              ,nullEENormdVals
+              ,0
+              ,realL3NormdVals
+              ,nullL3NormdVals
+              ,0
+              ,realYANormdVals
+              ,nullYANormdVals
+  )
+  , notch=T
+  , col=c('darkorchid4'
+          , alpha('darkorchid4',0.5)
+          ,'white','goldenrod2'
+          ,alpha('goldenrod2',0.5)
+          ,'white'
+          ,'darkgreen'
+          ,alpha('darkgreen',0.5)
+          )
+  , names=c('Embryo'
+             ,'Null'
+             ,""
+             ,"Larval"
+             , 'Null'
+             ,''
+             ,'Adult'
+             , 'Null'
+             )
+  , ylab='Log2(Mean bp PhastCons score / distal and non-coding genome median)'
+  , outline=FALSE
 )
 dev.off()
 
