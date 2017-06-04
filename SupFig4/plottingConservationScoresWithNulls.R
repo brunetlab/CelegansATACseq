@@ -33,28 +33,8 @@ nullYANormdVals <- log2(ya.nullData.asOne[,1]/genomeWideMedian)
 rm(phastConsScores.ya, phastConsScores.ya.noChrM, ya.nullData.asOne)
 
 
-# this was too difficult to deal with due to the number of outlier points in the null
-# pdf('conservationAllButL1.pdf')
-# boxplot(list(
-#   as.numeric(phastConsScores.ee.noChrM[,ncol(phastConsScores.ee.noChrM)]),
-#   as.numeric(ee.nullData.asOne[,1]), 0,
-#   as.numeric(phastConsScores.l3.noChrM[,ncol(phastConsScores.l3.noChrM)]),
-#   as.numeric(l3.nullData.asOne[,1]), 0,
-#   as.numeric(phastConsScores.ya.noChrM[,ncol(phastConsScores.ya.noChrM)]),
-#   as.numeric(ya.nullData.asOne[,1])
-#   ),
-#   notch=T, 
-#   ylim=c(0,1),
-#   col=c('dodgerblue3', 'lightblue','white','goldenrod3','burlywood1','white','firebrick3','salmon'),
-#   names=c('Embryo','Null',"","Larval\nstage 3", 'Null','','Adult', 'Null'),
-#   ylab='Mean PhastCons Score'
-# )
-# dev.off()
-# 
-
-#maxAbsScore <- max(abs(c(realEENormdVals,nullEENormdVals,realL3NormdVals,nullL3NormdVals,realYANormdVals,nullYANormdVals)))
-
-pdf('conservationAllButL1_noOutliers.pdf', width=5, height=5)
+pdf('conservation_noOutliers.pdf', width=5, height=5)
+# The 0s are for spacing
 boxplot(list(
   realEENormdVals,nullEENormdVals , 0,
   realL3NormdVals,nullL3NormdVals , 0,
@@ -68,57 +48,16 @@ ylab='Log2(Mean bp PhastCons score / distal and non-coding genome median)'
 )
 dev.off()
 
-pdf('conservationAllButL1_noOutliers_equal.pdf', width=5, height=5)
-boxplot(list(
-  realEENormdVals,nullEENormdVals , 0,
-  realL3NormdVals,nullL3NormdVals , 0,
-  realYANormdVals,nullYANormdVals
-),
-notch=T, 
-col=c('darkorchid4', alpha('darkorchid4',0.5),'white','goldenrod2',alpha('goldenrod2',0.5),'white','darkgreen',alpha('darkgreen',0.5)),
-names=c('Embryo','Null',"","Larval", 'Null','','Adult', 'Null'),
-ylab='Log2(Mean bp PhastCons score / distal and non-coding genome median)'
-, outline=FALSE
-,ylim=c(-1,1)
-)
-dev.off()
-
-quit()
-
-eeKSTest <- ks.test(realEENormdVals,nullEENormdVals)
-print(eeKSTest)
-print(format.pval(eeKSTest$p.value,6,1e-323))
-
-
+## Now check significance
 eeKSTest <- ks.test(as.numeric(phastConsScores.ee.noChrM[,ncol(phastConsScores.ee.noChrM)]),as.numeric(ee.nullData.asOne[,1]))
-#format.pval(eeKSTest$p.value,6,1e-323)
-#[1] "< 9.881e-324"
-l1KSTest <- ks.test(as.numeric(phastConsScores.l1.noChrM[,ncol(phastConsScores.l1.noChrM)]),as.numeric(l1.nullData.asOne[,1]))
+format.pval(eeKSTest$p.value,6,1e-323)
 #[1] "< 9.881e-324"
 l3KSTest <- ks.test(as.numeric(phastConsScores.l3.noChrM[,ncol(phastConsScores.l3.noChrM)]),as.numeric(l3.nullData.asOne[,1]))
 #[1] "< 9.881e-324"
 yaKSTest <- ks.test(as.numeric(phastConsScores.ya.noChrM[,ncol(phastConsScores.ya.noChrM)]),as.numeric(ya.nullData.asOne[,1]))
 #[1] "< 9.881e-324"
-#metaKSTest <- ks.test(as.numeric(phastConsScores.meta.noChrM[,ncol(phastConsScores.meta.noChrM)]),as.numeric(meta.nullData.asOne[,1]))
-#[1] "< 9.881e-324"
-
-
-
 
 # I also want to do a test against each individual shuffle, just to make sure the pvals aren't being inflated because of the numbers
-
-allL1Nulls <- list.files(path="./nullDists_consensusGdnaMaskedPeaks_phastCons7way.noRefSeqExons.noRepeats.Score_min0.5Overlap/L1/", pattern="L1*")
-L1Pvals <- vector('numeric',length=length(allL1Nulls))
-for (i in 1:length(allL1Nulls)){
-  nullData <- read.table(gzfile(paste('./nullDists_consensusGdnaMaskedPeaks_phastCons7way.noRefSeqExons.noRepeats.Score_min0.5Overlap/L1/',allL1Nulls[i],sep="")), header=F)
-  ksTest <- ks.test(as.numeric(phastConsScores.l1.noChrM[,ncol(phastConsScores.l1.noChrM)]),as.numeric(nullData[,1]))
-  L1Pvals[i] <- format.pval(ksTest$p.value,6,1e-323)
-}
-length(which(L1Pvals=="< 9.881e-324"))
-#[1] 7776
-length(allL1Nulls)
-#[1] 7776
-
 allL3Nulls <- list.files(path="./nullDists_consensusGdnaMaskedPeaks_phastCons7way.noRefSeqExons.noRepeats.Score_min0.5Overlap/L3/", pattern="L3*")
 L3Pvals <- vector('numeric',length=length(allL3Nulls))
 for (i in 1:length(allL3Nulls)){
@@ -156,7 +95,4 @@ for (i in 1:length(allEENulls)){
 }
 length(which(EEPvals=="< 9.881e-324"))
 
-
 # Every single one, for every single sample had a p < 9.881e-324
-
-
