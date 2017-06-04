@@ -18,8 +18,6 @@ metaAllEnh <- readAndRemoveChrM('./histoneModsAsControl/EE_L3_YA_combinedAllEnh_
 metaH3K27ac <- readAndRemoveChrM('./histoneModsAsControl/EE_L3_YA_H3K27ac_combinedConsensusReps.narrowPeak_mergedAllOverlaps_medianPhastCons7way.noRefSeqExons.noRepeats.Score_min0.5Overlap.bed_anyExonOrExtPromRemoved.bed')
 metaH3K4me1 <- readAndRemoveChrM('./histoneModsAsControl/EE_L3_YA_H3K4me1_combinedConsensusReps.narrowPeak_mergedAllOverlaps_medianPhastCons7way.noRefSeqExons.noRepeats.Score_min0.5Overlap.bed_anyExonOrExtPromRemoved.bed')
 
-#genomeWideMedian <- median(read.csv("/Volumes/extra/Genomic_files/worm/ce10/ce10_conservations/ce10.phastCons7way.noRefSeqExons.noRepeats.singleBp.bedGraph", sep="\t", header=F)[,4])
-#saveRDS(genomeWideMedian, file="distalAndNonCodingWideMedianPhastConsScore.rds")
 genomeWideMedian <- readRDS("distalAndNonCodingWideMedianPhastConsScore.rds")
 
 # now normalize all values to be relative to the genomewide median
@@ -30,15 +28,13 @@ k4Normd <- log2(metaH3K4me1[,ncol(metaH3K4me1)]/genomeWideMedian)
 
 
 pdf('conservationMetaPeaksAllHMPeaks_NonMerged_noOutliers.pdf', width=5, height=5)
-boxplot(list(
-  atacNormd,k4Normd,k27Normd,allNormd
-),
-notch=T, 
-col=c('goldenrod2',alpha('blue','red','orangered'),
-names=c('ATAC-seq','H3K4me1', 'H3K27ac','chromHMM predicted enh'),
-ylab='Log2(Median PhastCons score / distal and non-coding genome median)'
-, outline=FALSE
-)
+  boxplot(list(atacNormd,k4Normd,k27Normd,allNormd),
+    , notch=T
+    , col=c('goldenrod2',alpha('blue','red','orangered')
+    , names=c('ATAC-seq','H3K4me1', 'H3K27ac','chromHMM predicted enh')
+    , ylab='Log2(Median PhastCons score / distal and non-coding genome median)'
+    , outline=FALSE
+  )
 dev.off()
 
 allKSTest <- ks.test(atacNormd,allNormd)
@@ -49,5 +45,3 @@ format.pval(k27KSTest$p.value,6,1e-323)
 
 k4KSTest <- ks.test(atacNormd,k4Normd)
 format.pval(k4KSTest$p.value,6,1e-323)
-
-
