@@ -34,7 +34,18 @@ myMergedPredNames <- gsub("_", "", gsub(stage, "", gsub(".bed", "", sapply(myMer
 
 myIndividualPredFiles <- fileOfMyPreds[-c(1:6, 13)]
 myIndividualPredNames <- strsplit(as.character(myIndividualPredFiles), "/", fixed=T)
-myIndividualPredNames <- gsub("_", "", gsub(stage, "", gsub(".bed", "", sapply(myIndividualPredNames, "[[", length(myIndividualPredNames[[1]])))))
+myIndividualPredNames <- gsub("_"
+                             , ""
+                             , gsub(
+                                 stage
+                                 , ""
+                                 , gsub(
+                                     ".bed"
+                                     , ""
+                                     , sapply(myIndividualPredNames, "[[", length(myIndividualPredNames[[1]]))
+                                 )
+                             )
+                          )
 
 # get the list of their files
 theirIndividPredFiles <- list.files(hiHMMStateDir, pattern="*.bed$")
@@ -64,24 +75,20 @@ theirMergedPredNames[length(theirMergedPredNames) + 1] <- theirIndividPredNames[
 
 # I want to do all of the possible comparisons: both my individ and my merged vs both their individ and their merged
 
-myMergedVsAllTheirMerged <- genJacMat(theirMergedPredFiles, myMergedPredFiles, theirMergedPredNames, myMergedPredNames)
-myMergedVsTheirCoreMerged <- genJacMat(theirMergedPredFiles[-c(1,2,6, 10, 11)], myMergedPredFiles, theirMergedPredNames[-c(1,2,6, 10, 11)], myMergedPredNames)
-#
-myMergedVsTheirIndivid <- genJacMat(theirIndividPredFiles, myMergedPredFiles, theirIndividPredNames, myMergedPredNames)
-#
-myIndividVsTheirMerged <- genJacMat(theirMergedPredFiles, myIndividualPredFiles, theirMergedPredNames, myIndividualPredNames)
-myIndividVsTheirCoreMerged <- genJacMat(theirMergedPredFiles[-c(1,2,6, 10, 11)], myIndividualPredFiles, theirMergedPredNames[-c(1,2,6, 10, 11)], myIndividualPredNames)
-#
-myIndividVsTheirIndivid <- genJacMat(theirIndividPredFiles, myIndividualPredFiles, theirIndividPredNames, myIndividualPredNames)
 
-myMergedVsTheirCoreMerged_forPlotting <- genJacMat(theirMergedPredFiles[c(3,9,4,8,5,7)], myMergedPredFiles[c(6,5,2,7,3,4,1)], theirMergedPredNames[c(3,9,4,8,5,7)], myMergedPredNames[c(6,5,2,7,3,4,1)])
+myMergedVsTheirCoreMerged_forPlotting <- genJacMat(
+  theirMergedPredFiles[c(3,9,4,8,5,7)]
+  , myMergedPredFiles[c(6,5,2,7,3,4,1)]
+  , theirMergedPredNames[c(3,9,4,8,5,7)]
+  , myMergedPredNames[c(6,5,2,7,3,4,1)]
+)
 
 
 pdf(paste0(stage, "_pheatmaps_chromHMMVsHiHMM.pdf"), width=5, height=5)
-  pheatmap(myMergedVsTheirCoreMerged_forPlotting, cluster_rows=F, cluster_cols=F, main=paste0(stage, "_mergedStatesCondensed"))
-  pheatmap(myMergedVsAllTheirMerged, main=paste0(stage, "_mergedStates"))
-  pheatmap(myMergedVsTheirIndivid, main=paste0(stage, "_myMergedVsTheirIndivid"))
-  pheatmap(myIndividVsTheirMerged, main=paste0(stage, "_myIndividVsTheirMerged"))
-  pheatmap(myIndividVsTheirIndivid, cluster_rows=F, cluster_cols=F, main=paste0(stage, "_myIndividVsTheirIndivid"))
+  pheatmap(myMergedVsTheirCoreMerged_forPlotting
+           , cluster_rows=F
+           , cluster_cols=F
+           , main=paste0(stage, "_mergedStatesCondensed")
+   )
 dev.off()
 
