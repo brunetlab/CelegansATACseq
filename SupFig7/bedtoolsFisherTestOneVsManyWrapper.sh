@@ -2,9 +2,9 @@
 
 if [[ "$#" -lt 2 ]]
 then
-	echo "USEAGE: Check for enrichment of one set of peaks with respect to a list of other regions in a provided file (1 per line):" 1>&2
-	echo "This program accept any bed, or similarly formatted, file and outputs single base Bedtools Fischer enrichments" 1>&2
-	echo "$(basename $0) [BED]"  1>&2
+    echo "USEAGE: Check for enrichment of one set of peaks with respect to a list of other regions in a provided file (1 per line):" 1>&2
+    echo "This program accept any bed, or similarly formatted, file and outputs single base Bedtools Fischer enrichments" 1>&2
+    echo "$(basename $0) [BED]"  1>&2
     echo "$(basename $1) REGIONS"  1>&2
     echo "$(basename $2) OPTIONAL: OUTPUT_DIR"  1>&2
     echo "   [BED]: File to annotate" 1>&2
@@ -36,7 +36,8 @@ echo "# Checking for genic enrichments with ${BED}" > ${SUMMARY_FILE}
 
 while read line
 do
-	echo ${line} $(sortBed -i ${line} | grep -v 'chrM' - | bedtools fisher -a ${BED} -b - -g /Users/acd13/Desktop/ce10_chromSizes | tail -n1) >> ${SUMMARY_FILE}
-	#sortBed -i ${line} | bedtools fisher -a ${BED} -b - -g $CE10_GSIZE >> ${SUMMARY_FILE}
-	#echo "" >> ${SUMMARY_FILE}
+	echo ${line} $(sortBed -i ${line} |\
+	grep -v 'chrM' - |\
+	bedtools fisher -a ${BED} -b - -g /Users/acd13/Desktop/ce10_chromSizes |\
+	tail -n1) >> ${SUMMARY_FILE}
 done < ${REGIONS}
