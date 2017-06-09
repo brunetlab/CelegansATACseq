@@ -41,21 +41,12 @@ plotAllStagesAndMetaPeaks <- function(locus, windowSize=25, yLower=0, yUpper=NA,
   
   gtrack <- GenomeAxisTrack(fontsize=16)
   gtfFile <- "/Users/acd13/Desktop/geneDefinitions/ce10RefSeqGenesFromIGV.gtf"
-  #gtfFile <- "/Users/acd13/Desktop/ce10_RefSeqGenes_10Feb2015.gtf"
   myGeneModels <- makeMyGeneModels(gtfFile, plottingRegionBedFile)
   grtrack <- GeneRegionTrack(myGeneModels, genome = gen, chromosome = chr, name = "Gene Model", size=0.5)
   
   # The commented out code here is if I want to plot the pooled before gDNA normalization results
   baseDir <- "/Users/acd13/Desktop/ATAC/insertSites/N2dev/enrichmentOverGDNA/"
-  #EE_atacFile <- paste0(baseDir, "EE_allReps.adjusted.insertSites.",windowSize,"bpWindowMean.log2EnrichOverGDNA.bg.gz")
-  #EE_signal <- readInBedGraphFileAsGRange(EE_atacFile, plottingRegionBedFile)
-
-  #L3_atacFile <- paste0(baseDir, "L3_allReps.adjusted.insertSites.",windowSize,"bpWindowMean.log2EnrichOverGDNA.bg.gz")
-  #L3_signal <- readInBedGraphFileAsGRange(L3_atacFile, plottingRegionBedFile)
-
-  #YA_atacFile <- paste0(baseDir, "YA_allReps.adjusted.insertSites.",windowSize,"bpWindowMean.log2EnrichOverGDNA.bg.gz")
-  #YA_signal <- readInBedGraphFileAsGRange(YA_atacFile, plottingRegionBedFile)
-
+ 
   allReps_signalFile <- paste0("/Users/acd13/Desktop/ATAC/insertSites/N2dev/enrichmentOverGDNA/EE_L3_YA_IndividRepsABC.adjusted.insertSites.singleBP.log2EnrichOverGDNA.meanIn",windowSize, "bpWindows.bed.gz")
   signals <- readInBedGraphFileAsGRangeFromAllReps_combinedStages(allReps_signalFile, plottingRegionBedFile)
   EE_signal <- signals[[1]]
@@ -169,7 +160,6 @@ plotEE_v_L3_withDiffPeaks <- function(locus, windowSize=25, comparisonDirection,
   
   gtrack <- GenomeAxisTrack(fontsize=16)
   gtfFile <- "/Users/acd13/Desktop/geneDefinitions/ce10RefSeqGenesFromIGV.gtf"
-  #gtfFile <- "/Users/acd13/Desktop/ce10_RefSeqGenes_10Feb2015.gtf"
   myGeneModels <- makeMyGeneModels(gtfFile, plottingRegionBedFile)
   grtrack <- GeneRegionTrack(myGeneModels, genome = gen, chromosome = chr, name = "Gene Model", size=0.5)
   
@@ -361,8 +351,6 @@ readInBedFileAsGRangeCore <- function(bedData){
       return(with(bedData, GRanges(chr, IRanges(start, end), id=id)))
     }else if(length(bedData) >= 5) {
       return(with(bedData, GRanges(chr, IRanges(start, end), id=id, score=score)))
-      #}else if(length(bedData) >= 6) {
-      # return(with(bedData, GRanges(chr, IRanges(start, end), id=id, score=score, strand=strand)))
     }
   }else{
     if(ncol(bedData) ==3){
@@ -371,8 +359,6 @@ readInBedFileAsGRangeCore <- function(bedData){
       return(with(bedData, GRanges(chr, IRanges(start, end), id=id)))
     }else if(ncol(bedData) >= 5) {
       return(with(bedData, GRanges(chr, IRanges(start, end), id=id, score=score)))
-      # }else if(ncol(bedData) >= 6) {
-      #  return(with(bedData, GRanges(chr, IRanges(start, end), id=id, score=score, strand=strand)))
     }
   }
   return(NA)
@@ -452,13 +438,10 @@ getChromState <- function(stage, plottingRegionBedFile){
 
 
 
-
-
 #=================
 # set up a scheme
 #===============
 scheme <- getScheme()
-#scheme$GeneRegionTrack$collapseTranscripts='meta'
 scheme$GeneRegionTrack$fill <- 'black'
 scheme$GeneRegionTrack$col <- NULL
 scheme$GeneRegionTrack$transcriptAnnotation <- NULL
