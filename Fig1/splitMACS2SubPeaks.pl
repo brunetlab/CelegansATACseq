@@ -20,8 +20,6 @@ Arguments required: 1. .narrowPeak file to be parsed \n" unless($ARGV[0] =~ m/na
 #pull off the files and create the outputs
 my $input = shift;
 die "cannot open $input.\n" unless(open(IN, "<$input"));
-#my $out = shift;
-#die "cannot open $out.\n" unless(open(OUT, ">$out"));
 
 my @prevLine = undef;
 my @withinPeak;
@@ -29,7 +27,8 @@ while(my $line = <IN>){
     chomp $line;
     my @line = split/\t/, $line;
     if(defined($prevLine[0])){
-	if ($prevLine[2] ~~ $line[2] && $prevLine[0] ~~ $line[0]){ # If the end coordinates of 2 adjacent lines are the same on the same chromosome, it's the same peak
+    # If the end coordinates of 2 adjacent lines are the same on the same chromosome, it's the same peak
+	if ($prevLine[2] ~~ $line[2] && $prevLine[0] ~~ $line[0]){ 
 	    push @withinPeak,[@prevLine];
 	}elsif(defined($withinPeak[0])){
 	    push @withinPeak,[@prevLine];
@@ -40,15 +39,17 @@ while(my $line = <IN>){
 		my @rightSummitLine = @{$withinPeak[$i]};
 		
 		my $halfDistBetween = floor(($rightSummitLine[-1] - $leftSummitLine[-1])/2);
-		
-		$leftSummitLine[2] = $start+$leftSummitLine[-1]+$halfDistBetween; # that is, the original start plus the distance to the summit, plus the half distance
-		
+		 # that is, the original start plus the distance to the summit, plus the half distance
+		$leftSummitLine[2] = $start+$leftSummitLine[-1]+$halfDistBetween;		
 		if ($i >1){
 		    my @prevPeak=@{$split[-1]};
-		    $leftSummitLine[1] = $prevPeak[2]; # this peaks' start is the same as the end of the previous peak
-		    $leftSummitLine[-1]-=($leftSummitLine[1]-$start); # adjust the summit so it is now with respect to the new start
+		    # this peaks' start is the same as the end of the previous peak
+		    $leftSummitLine[1] = $prevPeak[2]; 
+		    # adjust the summit so it is now with respect to the new start
+		    $leftSummitLine[-1]-=($leftSummitLine[1]-$start); 
 		}else{
-		    $leftSummitLine[1] = $start # this should only be for the first situation
+		# this should only be for the first situation
+		    $leftSummitLine[1] = $start 
 		}
 		
 		push @split, [@leftSummitLine]
@@ -56,7 +57,8 @@ while(my $line = <IN>){
 	    }
 	    # Take care of the last one
 	    $prevLine[1] = $split[$#split][2];
-	    $prevLine[-1]-=($prevLine[1]-$start); # adjust the summit so it is now with respect to the new start
+	    # adjust the summit so it is now with respect to the new start
+	    $prevLine[-1]-=($prevLine[1]-$start); 
 	    
 	    foreach my$subPeak (@split){
 		print join("\t", @{$subPeak})."\n";
@@ -71,8 +73,7 @@ while(my $line = <IN>){
     @prevLine = @line;
 }
 
-# This is ridiculously inefficient coding-wise, but it takes cares of the situation where the last peak has a sub peak
-
+# I shuld have just made a couple subfunctions, but this takes cares of the situation where the last peak has a sub peak
 if(defined($withinPeak[0])){
     push @withinPeak,[@prevLine];
     my $start = $withinPeak[0][1];
