@@ -5,9 +5,8 @@ The code for Daugherty, et al 2017 - Chromatin accessibility dynamics reveal nov
 Figure|Panel|Comments|Program name
 ---|---|---|---
 1|A/B|General pipeline|ATACPipeline_combined.sh
-	|	|	|pyadapter_trim.py
----|---|---|---
-	|	|	|random_split_fastq.pl
+|||pyadapter_trim.py
+|||random_split_fastq.pl
 ---|---|---|---
 	|	|get consensus peaks|reRunningWithoutL1s.sh
 ---|---|---|---
