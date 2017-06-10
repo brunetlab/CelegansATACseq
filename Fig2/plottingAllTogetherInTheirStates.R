@@ -117,7 +117,6 @@ for (i in 1: length(stages)){
   
 }
 
-
 combined_enrich.rotated<-rotate(log2(atacEnrichs))
 color=c('darkorchid4','goldenrod2','darkgreen')
 
@@ -144,34 +143,3 @@ text(1,6.5,"Heterochromatin")
 text(1,2.5,"Low")
 legend('topright',stages, col=color, pch=15, bty='n')
 dev.off()
-
-
-
-### Everything below here wasn't used
-
-# Plot the percentages
-
-combined_atacPercs.rotated<-rotate(atacPercs[c(-7,-8),])
-combined_medianPercs.rotated<-rotate(medianPercs[c(-7,-8),])
-library(scales)
-color=c('darkorchid4',alpha('darkorchid4', 0.5),'goldenrod2',alpha('goldenrod2',0.5),'darkgreen',alpha('darkgreen',0.5))
-
-enhancersOnlyToPlot <- rbind(combined_atacPercs.rotated[,4], combined_medianPercs.rotated[,4])
-# Plot the enrichment
-par(family='serif', cex=1.2)
-par(mar=c(4.1,4.1,4.1,2.1))
-barx <- barplot(rbind(atacPercs[3,],medianPercs[3,]), 
-                col=color,
-                beside=T
-                ,ylim=c(0,35)
-                ,ylab='% ATAC-seq peaks in enhancer predicted chromatin state'
-                , cex.axis=1.2, cex.lab=1.2,
-)
-errorBarsTops <- c(atacPercs[3,1], maxPercs[3,1], atacPercs[3,2], maxPercs[3,2], atacPercs[3,3], maxPercs[3,3])
-errorBarsBots <- c(atacPercs[3,1], minPercs[3,1], atacPercs[3,2], minPercs[3,2], atacPercs[3,3], minPercs[3,3])
-# this genreates a lot of warnings, but no big deal
-arrows(barx, errorBarsTops, barx, errorBarsBots, length=0.05, angle=90, code=3)
-
-legend('top',stages, col=color[c(1,3,5)], pch=15, bty='n', cex=1.2)
-
-
