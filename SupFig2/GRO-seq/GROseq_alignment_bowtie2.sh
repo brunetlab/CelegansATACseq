@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#### This takes care of the first part of the process
-# this takes the original reads (post reads qc filter (performed by the sequencer)), trims the adapters, then aligns the reads to ce10
+# this takes the post-TrimGalore! reads then aligns the reads to ce10
 
 if [[ "$#" -lt 2 ]]
 then
@@ -19,19 +18,6 @@ BAM_DIR=$(echo $2 | sed 's:/$::g')
 # make bam directory if it doesnt exist
 [[ ! -d "${BAM_DIR}/" ]] && mkdir "${BAM_DIR}/"
 [[ ! -d "${BAM_DIR}/metrics" ]] && mkdir "${BAM_DIR}/metrics"
-
-# 0) Trim adaptor sequences
-cd ${FASTQ_DIR}
-mkdir Raw
-for f in $(find "$FASTQ_DIR" -name '*_1.fastq')
-do
-	echo "Trimming: $f...\n"
-	fileName2=$(basename "${f}" | sed 's/_1\.fastq/_2\.fastq/g')
-	python /Users/acd13/Dropbox/Scripts/MostUsed/pyadapter_trim.py -a $f -b $fileName2
-	mv $f ./Raw/
-	mv $fileName2 ./Raw/
-done
-echo "Finished trimming\n"
 
 # 1) Map with bowite2
 
