@@ -10,7 +10,7 @@ heatmap_pdfs <- c('/Users/acd13/Desktop/ATAC/Analysis/Enrichments/TF_peaks_in_ch
                   '/Users/acd13/Desktop/ATAC/Analysis/Enrichments/TFPeaks_in_other_peaks/fishers_test_odds_ratios_TFPeaks_in_L3TFPeaks_heatmaps.pdf'
                   )
 
-name_inds <- c(11, 11, 10)
+name_ind <- 11
 
 for (i in 1:length(dds)){
   data_dir <- dds[i]
@@ -33,7 +33,7 @@ for (i in 1:length(dds)){
   # Set the diagnol (self comparisons) to NA
   odds_ratios[is.infinite(odds_ratios)] <- NA
   # update names
-  rownames(odds_ratios) <- sapply(strsplit(sapply(data_list, '[[', 1)[,1], "/", fixed=T), '[[', name_inds[i])
+  rownames(odds_ratios) <- sapply(strsplit(sapply(data_list, '[[', 1)[,1], "/", fixed=T), '[[', name_ind)
   colnames(odds_ratios) <- unlist(names)
   
   # a small value was added to avoid log2 of 0
